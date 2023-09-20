@@ -1,8 +1,13 @@
+using GifStorage.Data;
+using Microsoft.EntityFrameworkCore;
+
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 
 builder.Services.AddControllersWithViews();
+var connectionString = builder.Configuration.GetConnectionString("SQLite");
+builder.Services.AddDbContext<DataContext>(options => options.UseSqlite(connectionString));
 
 var app = builder.Build();
 
