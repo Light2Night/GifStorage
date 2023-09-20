@@ -6,7 +6,7 @@ namespace GifStorage.Controllers {
 	[Route("api/[controller]")]
 	[ApiController]
 	public class GifController : ControllerBase {
-		private DataContext _dataContext;
+		private readonly DataContext _dataContext;
 
 		public GifController(DataContext dataContext) {
 			_dataContext = dataContext;
