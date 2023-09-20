@@ -3,7 +3,7 @@ using GifStorage.Data.Entities;
 using Microsoft.AspNetCore.Mvc;
 
 namespace GifStorage.Controllers {
-	[Route("api/[controller]")]
+	[Route("api/[controller]/[action]")]
 	[ApiController]
 	public class GifController : ControllerBase {
 		private readonly DataContext _dataContext;

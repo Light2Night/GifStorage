@@ -1,4 +1,6 @@
 import React, { Component } from 'react';
+import GifItem from './GifItem';
+import styles from './style.module.css'
 
 export class GifList extends Component {
   constructor(props) {
@@ -17,18 +19,20 @@ export class GifList extends Component {
   render() {
     const { gifs, loading } = this.state;
 
-    const parsedGifs = gifs.map(g => <img id={g.id} src={g.url} alt='gif'></img>);
+    const parsedGifs = gifs.map(g => <GifItem gif={g} />);
 
     return (
-      <div>
+      <div className={styles.window}>
         {loading && <p>Loading...</p>}
-        {parsedGifs}
+        <div className={styles.container}>
+          {parsedGifs}
+        </div>
       </div>
     );
   }
 
   populateWeatherData = async () => {
-    const response = await fetch('api/gif');
+    const response = await fetch('api/gif/get');
     const data = await response.json();
     this.setState({ gifs: data, loading: false });
   }
