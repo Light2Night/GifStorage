@@ -13,6 +13,14 @@ namespace GifStorage.Data {
 					x.GifId,
 					x.TagId
 				});
+
+			modelBuilder.Entity<Gif>()
+				.Property(g => g.Url)
+				.HasMaxLength(200);
+
+			modelBuilder.Entity<Tag>()
+				.Property(g => g.Name)
+				.HasMaxLength(100);
 		}
 
 		public DbSet<Gif> Gifs { get; set; }

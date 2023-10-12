@@ -10,8 +10,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace GifStorage.Migrations
 {
     [DbContext(typeof(DataContext))]
-    [Migration("20230920162140_Init")]
-    partial class Init
+    [Migration("20231012131057_Initial")]
+    partial class Initial
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -27,6 +27,7 @@ namespace GifStorage.Migrations
 
                     b.Property<string>("Url")
                         .IsRequired()
+                        .HasMaxLength(200)
                         .HasColumnType("TEXT");
 
                     b.HasKey("Id");
@@ -57,26 +58,12 @@ namespace GifStorage.Migrations
 
                     b.Property<string>("Name")
                         .IsRequired()
+                        .HasMaxLength(100)
                         .HasColumnType("TEXT");
 
                     b.HasKey("Id");
 
                     b.ToTable("Tags");
-                });
-
-            modelBuilder.Entity("GifTag", b =>
-                {
-                    b.Property<long>("GifsId")
-                        .HasColumnType("INTEGER");
-
-                    b.Property<long>("TagsId")
-                        .HasColumnType("INTEGER");
-
-                    b.HasKey("GifsId", "TagsId");
-
-                    b.HasIndex("TagsId");
-
-                    b.ToTable("GifTag");
                 });
 
             modelBuilder.Entity("GifStorage.Data.Entities.GifTag", b =>
@@ -96,21 +83,6 @@ namespace GifStorage.Migrations
                     b.Navigation("Gif");
 
                     b.Navigation("Tag");
-                });
-
-            modelBuilder.Entity("GifTag", b =>
-                {
-                    b.HasOne("GifStorage.Data.Entities.Gif", null)
-                        .WithMany()
-                        .HasForeignKey("GifsId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("GifStorage.Data.Entities.Tag", null)
-                        .WithMany()
-                        .HasForeignKey("TagsId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
                 });
 
             modelBuilder.Entity("GifStorage.Data.Entities.Gif", b =>
