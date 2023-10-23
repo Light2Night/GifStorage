@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import GifItem from './GifItem';
 import styles from './style.module.css'
+import AddGifForm from './AddGifForm';
 
 export class GifList extends Component {
   constructor(props) {
@@ -8,30 +9,49 @@ export class GifList extends Component {
 
     this.state = {
       gifs: [],
-      loading: true
+      loading: true,
+      showAddGifForm: false
     };
   }
 
   componentDidMount() {
-    this.populateWeatherData();
+    this.reloadGifs();
+  }
+
+  reloadGifs = () => {
+    this.getGifs();
   }
 
   render() {
-    const { gifs, loading } = this.state;
+    const { gifs, loading, showAddGifForm } = this.state;
 
-    const parsedGifs = gifs.map(g => <GifItem gif={g} />);
+    const parsedGifs = gifs.map(g => <GifItem key={g.id} gif={g} />);
 
     return (
-      <div className={styles.window}>
-        {loading && <p>Loading...</p>}
-        <div className={styles.container}>
-          {parsedGifs}
+      <>
+        <div>
+          <button className="btn btn-primary" onClick={this.addGifMenuSwitch}>Меню додавання GIF</button>
         </div>
-      </div>
+        {showAddGifForm && <AddGifForm reloadGifs={this.reloadGifs} />}
+        <div className={styles.window}>
+          {loading && <p>Loading...</p>}
+          <div className={styles.container}>
+            {parsedGifs}
+          </div>
+        </div>
+      </>
     );
   }
 
-  populateWeatherData = async () => {
+  addGifMenuSwitch = () => {
+    this.setState(oldState => {
+      return {
+        showAddGifForm: !oldState.showAddGifForm
+      };
+    });
+  }
+
+  getGifs = async () => {
     const response = await fetch('api/gif/get');
     const data = await response.json();
     this.setState({ gifs: data, loading: false });
