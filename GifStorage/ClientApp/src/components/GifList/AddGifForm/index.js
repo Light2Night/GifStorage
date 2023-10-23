@@ -5,18 +5,20 @@ class AddGifForm extends Component {
     super(props);
 
     this.state = {
-      url: ""
+      url: "",
+      errorMessage: ""
     }
   }
 
   render() {
-    const { url } = this.state;
+    const { url, errorMessage } = this.state;
 
     return (
       <form onSubmit={this.handleSubmit}>
         <div className="form-group">
           <label htmlFor="urlInput">Url</label>
-          <input type="text" className="form-control" id="urlInput" value={url} onChange={this.handleInputChange} />
+          <input type="text" className="form-control" id="urlInput" value={url} onChange={this.handleInputChange} required />
+          {errorMessage && <span className='text-danger'>{errorMessage}</span>}
         </div>
         <br />
         <button type="submit" className="btn btn-primary">Додати</button>
@@ -33,26 +35,26 @@ class AddGifForm extends Component {
     this.addGif();
   };
 
-  addGif = () => {
+  addGif = async () => {
     const { url } = this.state;
 
     const data = { url };
 
-    fetch('api/gif/add', {
+    const response = await fetch('api/gif/add', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json'
       },
       body: JSON.stringify(data)
-    })
-      .then(() => {
-        this.setState({ url: "" });
-        this.props.reloadGifs();
-        console.log('Успішно додано') // Видалити в майбутньому
-      })
-      .catch(error => {
-        console.error('Помилка додавання:', error); // Видалити в майбутньому
-      });
+    });
+
+    if (response.ok) {
+      this.setState({ url: "" });
+      this.props.reloadGifs();
+    }
+    else {
+      this.setState({ errorMessage: "Помилка додавання, можливо такий елемент уже є у базі даних" });
+    }
   }
 }
 

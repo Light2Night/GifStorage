@@ -15,6 +15,9 @@ namespace GifStorage.Data {
 				});
 
 			modelBuilder.Entity<Gif>()
+				.HasAlternateKey(g => g.Url);
+
+			modelBuilder.Entity<Gif>()
 				.Property(g => g.Url)
 				.HasMaxLength(200);
 
