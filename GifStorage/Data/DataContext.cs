@@ -1,33 +1,33 @@
 ﻿using GifStorage.Data.Entities;
 using Microsoft.EntityFrameworkCore;
 
-namespace GifStorage.Data {
-	public class DataContext : DbContext {
-		public DataContext(DbContextOptions options) : base(options) { }
+namespace GifStorage.Data;
 
-		protected override void OnModelCreating(ModelBuilder modelBuilder) {
-			base.OnModelCreating(modelBuilder);
+public class DataContext : DbContext {
+	public DataContext(DbContextOptions options) : base(options) { }
 
-			modelBuilder.Entity<GifTag>()
-				.HasKey(x => new {
-					x.GifId,
-					x.TagId
-				});
+	protected override void OnModelCreating(ModelBuilder modelBuilder) {
+		base.OnModelCreating(modelBuilder);
 
-			modelBuilder.Entity<Gif>()
-				.HasAlternateKey(g => g.Url);
+		modelBuilder.Entity<GifTag>()
+			.HasKey(x => new {
+				x.GifId,
+				x.TagId
+			});
 
-			modelBuilder.Entity<Gif>()
-				.Property(g => g.Url)
-				.HasMaxLength(200);
+		modelBuilder.Entity<Gif>()
+			.HasAlternateKey(g => g.Url);
 
-			modelBuilder.Entity<Tag>()
-				.Property(g => g.Name)
-				.HasMaxLength(100);
-		}
+		modelBuilder.Entity<Gif>()
+			.Property(g => g.Url)
+			.HasMaxLength(200);
 
-		public DbSet<Gif> Gifs { get; set; }
-		public DbSet<Tag> Tags { get; set; }
-		public DbSet<GifTag> GifTags { get; set; }
+		modelBuilder.Entity<Tag>()
+			.Property(g => g.Name)
+			.HasMaxLength(100);
 	}
+
+	public DbSet<Gif> Gifs { get; set; }
+	public DbSet<Tag> Tags { get; set; }
+	public DbSet<GifTag> GifTags { get; set; }
 }
