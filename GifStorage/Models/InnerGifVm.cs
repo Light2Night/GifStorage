@@ -1,5 +1,6 @@
 ﻿namespace GifStorage.Models;
 
-public class AddGifVm {
+public class InnerGifVm {
+	public long Id { get; set; }
 	public string Url { get; set; } = null!;
 }

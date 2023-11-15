@@ -40,7 +40,7 @@ class AddGifForm extends Component {
 
     const data = { url };
 
-    const response = await fetch('api/gif/add', {
+    const response = await fetch('api/gif/create', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json'
