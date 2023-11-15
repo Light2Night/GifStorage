@@ -1,4 +1,5 @@
 using GifStorage;
+using GifStorage.AutoMapper;
 using GifStorage.Data;
 using Microsoft.EntityFrameworkCore;
 
@@ -12,6 +13,8 @@ builder.Services.AddDbContext<DataContext>(options => options.UseSqlite(connecti
 
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
+
+builder.Services.AddAutoMapper(typeof(AppMappingProfile));
 
 var app = builder.Build();
 
