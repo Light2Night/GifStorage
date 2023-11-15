@@ -1,23 +1,25 @@
 ﻿using GifStorage.Data;
 using GifStorage.Data.Entities;
+using GifStorage.Exceptions;
 using GifStorage.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using System.Net;
 
 namespace GifStorage.Controllers;
 
 [Route("api/[controller]/[action]")]
 [ApiController]
 public class GifController : ControllerBase {
-	private readonly DataContext _сontext;
+	private readonly DataContext _context;
 
 	public GifController(DataContext dataContext) {
-		_сontext = dataContext;
+		_context = dataContext;
 	}
 
 	[HttpGet]
-	public async Task<IEnumerable<Gif>> Get() {
-		return await _сontext.Gifs.ToListAsync();
+	public async Task<IActionResult> Get() {
+		return Ok(await _context.Gifs.ToListAsync());
 	}
 
 	[HttpPost]
@@ -29,13 +31,19 @@ public class GifController : ControllerBase {
 			return BadRequest("Invalid data");
 
 		try {
-			await _сontext.Gifs.AddAsync(new Gif {
+			if (await _context.Gifs.AnyAsync(g => g.Url == model.Url))
+				throw new ElementIsAlreadyExists();
+
+			await _context.Gifs.AddAsync(new Gif {
 				Url = model.Url
 			});
-			await _сontext.SaveChangesAsync();
+			await _context.SaveChangesAsync();
+		}
+		catch (ElementIsAlreadyExists ex) {
+			return StatusCode((int)HttpStatusCode.Conflict, ex.Message);
 		}
 		catch (Exception ex) {
-			return StatusCode(500, "Internal server error: " + ex.Message);
+			return StatusCode((int)HttpStatusCode.InternalServerError, "Internal server error: " + ex.Message);
 		}
 
 		return Ok();
