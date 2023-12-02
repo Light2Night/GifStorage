@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import { createCategoryAsync } from '../../../api';
 
 class AddGifForm extends Component {
   constructor(props) {
@@ -38,21 +39,15 @@ class AddGifForm extends Component {
   addGif = async () => {
     const { url } = this.state;
 
-    const data = { url };
+    const form = new FormData();
+    form.append('url', url);
 
-    const response = await fetch('api/gif/create', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify(data)
-    });
-
-    if (response.ok) {
+    try {
+      createCategoryAsync(form);
       this.setState({ url: "" });
       this.props.reloadGifs();
     }
-    else {
+    catch (error) {
       this.setState({ errorMessage: "Помилка додавання, можливо такий елемент уже є у базі даних" });
     }
   }

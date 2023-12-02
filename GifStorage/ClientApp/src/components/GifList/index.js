@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import GifItem from './GifItem';
 import styles from './style.module.css'
 import AddGifForm from './AddGifForm';
+import { getGifsAsync } from '../../api';
 
 export class GifList extends Component {
   constructor(props) {
@@ -52,8 +53,7 @@ export class GifList extends Component {
   }
 
   getGifs = async () => {
-    const response = await fetch('api/gif/get');
-    const data = await response.json();
+    const data = await getGifsAsync();
     this.setState({ gifs: data, loading: false });
   }
 }

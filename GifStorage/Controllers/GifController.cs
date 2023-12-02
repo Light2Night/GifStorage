@@ -25,10 +25,7 @@ public class GifController(DataContext _dataContext, IMapper _mapper) : Controll
 	}
 
 	[HttpPost]
-	public async Task<IActionResult> Create(CreateGifVm? model) {
-		if (model is null)
-			return BadRequest("Model is null");
-
+	public async Task<IActionResult> Create([FromForm] CreateGifVm model) {
 		if (!ModelState.IsValid)
 			return BadRequest("Invalid data");
 
