@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import GifItem from './GifItem';
 import styles from './style.module.css'
-import AddGifForm from './AddGifForm';
+import AddGif from '../AddGif';
 import { getGifsAsync } from '../../api';
 
 export class GifList extends Component {
@@ -10,8 +10,7 @@ export class GifList extends Component {
 
     this.state = {
       gifs: [],
-      loading: true,
-      showAddGifForm: false
+      loading: true
     };
   }
 
@@ -24,16 +23,12 @@ export class GifList extends Component {
   }
 
   render() {
-    const { gifs, loading, showAddGifForm } = this.state;
+    const { gifs, loading } = this.state;
 
     const parsedGifs = gifs.map(g => <GifItem key={g.id} gif={g} />);
 
     return (
       <>
-        <div>
-          <button className="btn btn-primary" onClick={this.addGifMenuSwitch}>Меню додавання GIF</button>
-        </div>
-        {showAddGifForm && <AddGifForm reloadGifs={this.reloadGifs} />}
         <div className={styles.window}>
           {loading && <p>Loading...</p>}
           <div className={styles.container}>
@@ -42,14 +37,6 @@ export class GifList extends Component {
         </div>
       </>
     );
-  }
-
-  addGifMenuSwitch = () => {
-    this.setState(oldState => {
-      return {
-        showAddGifForm: !oldState.showAddGifForm
-      };
-    });
   }
 
   getGifs = async () => {
