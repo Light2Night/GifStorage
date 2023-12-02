@@ -11,15 +11,7 @@ namespace GifStorage.Controllers;
 
 [Route("api/[controller]/[action]")]
 [ApiController]
-public class GifTagController : ControllerBase {
-	private readonly DataContext _context;
-	private readonly IMapper _mapper;
-
-	public GifTagController(DataContext dataContext, IMapper mapper) {
-		_context = dataContext;
-		_mapper = mapper;
-	}
-
+public class GifTagController(DataContext dataContext, IMapper mapper) : ControllerBase {
 	[HttpPost]
 	public async Task<IActionResult> Create(CreateGifTagVm? model) {
 		if (model is null)
@@ -29,11 +21,11 @@ public class GifTagController : ControllerBase {
 			return BadRequest("Invalid data");
 
 		try {
-			if (await _context.GifTags.AnyAsync(gt => gt.GifId == model.GifId && gt.TagId == model.TagId))
+			if (await dataContext.GifTags.AnyAsync(gt => gt.GifId == model.GifId && gt.TagId == model.TagId))
 				throw new ElementIsAlreadyExists();
 
-			await _context.GifTags.AddAsync(_mapper.Map<GifTag>(model));
-			await _context.SaveChangesAsync();
+			await dataContext.GifTags.AddAsync(mapper.Map<GifTag>(model));
+			await dataContext.SaveChangesAsync();
 		}
 		catch (ElementIsAlreadyExists ex) {
 			return StatusCode((int)HttpStatusCode.Conflict, ex.Message);
@@ -53,15 +45,15 @@ public class GifTagController : ControllerBase {
 		if (!ModelState.IsValid)
 			return BadRequest("Invalid data");
 
-		var target = await _context.GifTags
+		var target = await dataContext.GifTags
 			.FirstOrDefaultAsync(gt => gt.GifId == model.GifId && gt.TagId == model.TagId);
 
 		if (target is null)
 			return Ok();
 
 		try {
-			_context.GifTags.Remove(target);
-			await _context.SaveChangesAsync();
+			dataContext.GifTags.Remove(target);
+			await dataContext.SaveChangesAsync();
 		}
 		catch (ElementIsAlreadyExists ex) {
 			return StatusCode((int)HttpStatusCode.Conflict, ex.Message);

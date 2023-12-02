@@ -11,21 +11,13 @@ namespace GifStorage.Controllers;
 
 [Route("api/[controller]/[action]")]
 [ApiController]
-public class TagController : ControllerBase {
-	private readonly DataContext _context;
-	private readonly IMapper _mapper;
-
-	public TagController(DataContext dataContext, IMapper mapper) {
-		_context = dataContext;
-		_mapper = mapper;
-	}
-
+public class TagController(DataContext dataContext, IMapper mapper) : ControllerBase {
 	[HttpGet]
 	public async Task<IActionResult> Get() {
-		var response = await _context.Tags
+		var response = await dataContext.Tags
 			.Include(t => t.GifTags)
 			.ThenInclude(gt => gt.Gif)
-			.Select(t => _mapper.Map<TagVm>(t))
+			.Select(t => mapper.Map<TagVm>(t))
 			.ToListAsync();
 
 		return Ok(response);
@@ -43,8 +35,8 @@ public class TagController : ControllerBase {
 			//if (await _context.Tags.AnyAsync(t => t.Name == model.Name))
 			//	throw new ElementIsAlreadyExists();
 
-			await _context.Tags.AddAsync(_mapper.Map<Tag>(model));
-			await _context.SaveChangesAsync();
+			await dataContext.Tags.AddAsync(mapper.Map<Tag>(model));
+			await dataContext.SaveChangesAsync();
 		}
 		catch (ElementIsAlreadyExists ex) {
 			return StatusCode((int)HttpStatusCode.Conflict, ex.Message);

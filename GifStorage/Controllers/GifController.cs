@@ -12,18 +12,10 @@ namespace GifStorage.Controllers;
 
 [Route("api/[controller]/[action]")]
 [ApiController]
-public class GifController : ControllerBase {
-	private readonly DataContext _context;
-	private readonly IMapper _mapper;
-
-	public GifController(DataContext dataContext, IMapper mapper) {
-		_context = dataContext;
-		_mapper = mapper;
-	}
-
+public class GifController(DataContext _dataContext, IMapper _mapper) : ControllerBase {
 	[HttpGet]
 	public async Task<IActionResult> Get() {
-		var response = await _context.Gifs
+		var response = await _dataContext.Gifs
 			.Include(g => g.GifTags)
 			.ThenInclude(gt => gt.Tag)
 			.Select(g => _mapper.Map<GifVm>(g))
@@ -44,11 +36,11 @@ public class GifController : ControllerBase {
 			model.Url = TenorHelper.GetGifUrlByPageUrl(model.Url);
 
 		try {
-			if (await _context.Gifs.AnyAsync(g => g.Url == model.Url))
+			if (await _dataContext.Gifs.AnyAsync(g => g.Url == model.Url))
 				throw new ElementIsAlreadyExists();
 
-			await _context.Gifs.AddAsync(_mapper.Map<Gif>(model));
-			await _context.SaveChangesAsync();
+			await _dataContext.Gifs.AddAsync(_mapper.Map<Gif>(model));
+			await _dataContext.SaveChangesAsync();
 		}
 		catch (ElementIsAlreadyExists ex) {
 			return StatusCode((int)HttpStatusCode.Conflict, ex.Message);
