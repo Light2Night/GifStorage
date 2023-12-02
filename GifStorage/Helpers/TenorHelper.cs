@@ -3,6 +3,8 @@
 namespace GifStorage.Helpers;
 
 public static class TenorHelper {
+	public static bool IsTenorUrl(string url) => url.StartsWith("https://tenor.com");
+
 	public static string GetGifUrlByPageUrl(string pageUrl) {
 		using var document = new HTMLDocument(pageUrl);
 

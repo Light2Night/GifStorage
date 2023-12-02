@@ -40,7 +40,7 @@ public class GifController : ControllerBase {
 		if (!ModelState.IsValid)
 			return BadRequest("Invalid data");
 
-		if (model.Url.StartsWith("https://tenor.com"))
+		if (TenorHelper.IsTenorUrl(model.Url))
 			model.Url = TenorHelper.GetGifUrlByPageUrl(model.Url);
 
 		try {
