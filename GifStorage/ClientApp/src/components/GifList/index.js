@@ -31,7 +31,7 @@ export class GifList extends Component {
     return (
       <>
         <div>
-          <button className="btn btn-primary" onClick={this.addGifMenuSwitch} disabled={loading}>Меню додавання GIF</button>
+          <button className="btn btn-primary" onClick={this.addGifMenuSwitch}>Меню додавання GIF</button>
         </div>
         {showAddGifForm && <AddGifForm reloadGifs={this.reloadGifs} />}
         <div className={styles.window}>

@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import styles from './style.module.css';
 import CopyToClipboard from 'react-copy-to-clipboard';
+import { invalidImageUrl } from '../../../api';
 
 class GifItem extends Component {
   constructor(props) {
@@ -31,7 +32,7 @@ class GifItem extends Component {
   }
 
   imageErrorHandler = (e) => {
-    console.dir(e.target);
+    e.target.src = invalidImageUrl;
   }
 }
 
